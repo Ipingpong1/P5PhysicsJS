@@ -206,11 +206,8 @@ class orb{
      * Displays the orb's velocity
      * @param {*} multiplier Extra length to add to final velocity arrow
      */
-    showVelocity(multiplier){
-        if(multiplier == undefined){
-            multiplier = 1
-        }
-        arrow(this.xpos, this.ypos, this.velocity.xcom, this.velocity.ycom, multiplier, 10, 5)
+    showVelocity(multiplier = 1){
+        arrow(this.xpos, this.ypos, this.velocity.xcom, this.velocity.ycom, 10, 5, multiplier)
     }
 
     /**
@@ -223,6 +220,10 @@ class orb{
             255-clampNumber(Math.min(...this.trace_velocity)/.5, Math.max(...this.trace_velocity)*.5, 0, 255, this.trace_velocity[this.i]))
             line(this.trace_mat_x[this.i], this.trace_mat_y[this.i],this.trace_mat_x[this.i-1], this.trace_mat_y[this.i-1])
         }
+    }
+
+    applyForce(newtons, direction){
+        this.velocity.addVector(createVectorOfAngleAndMagnitude(direction, newtons/this.mass))
     }
 }
 
@@ -282,11 +283,13 @@ function gravitationalAttractionBetweenTwoOrbs(rorb, oorb){
  * @param {*} dy The dy distance from the initial y to the head
  * @param {*} length_multiplier Value to make the arrow appear larger or smaller
  */
-function arrow(x,y,dx,dy,length_multiplier, height, width){
+function arrow(x,y,dx,dy, height, width, length_multiplier = 1, color = [255,255,255]){
     push()
     finalx = x+dx*length_multiplier
     finaly = y+dy*length_multiplier
-    stroke(255)
+    stroke(color[0], color[1], color[2])
+    fill(color[0], color[1], color[2])
+
     line(x,y,finalx,finaly)
     h = -height
     w = -width
